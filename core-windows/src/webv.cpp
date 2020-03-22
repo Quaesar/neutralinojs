@@ -13,7 +13,7 @@ extern "C"
 		webview.url = url;
 		webview.width = width;
 		webview.height = height;
-		webview.resizable = 1;
+		webview.resizable = 0;
 		int r = webview_init(&webview);
 		webview_set_fullscreen(&webview, fullscreen);
 		if (r != 0)

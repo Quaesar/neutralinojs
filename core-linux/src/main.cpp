@@ -49,7 +49,7 @@ void uiThread(string appname, int port, int width, int height,
   webview.url = url.c_str();
   webview.width = width;
   webview.height = height;
-  webview.resizable = 1;
+  webview.resizable = 0;
   webview.always_on_top = always_on_top;
   webview.iconfile = iconfile.c_str();
   webview.debug = enable_inspector;

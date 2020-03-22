@@ -47,7 +47,7 @@ void runUi(string appname, int port, int width, int height, int fullscreen) {
     webview.url = url.c_str();
     webview.width = width;
     webview.height = height;
-    webview.resizable = 1;
+    webview.resizable = 0;
     int r = webview_init(&webview);
     webview_set_fullscreen(&webview, fullscreen);
     if (r != 0) {
@@ -65,7 +65,7 @@ void runServer(int listenFd){
         memset(&clientAddr, 0, sizeof(clientAddr));
         int connFd = Socket::Accept(listenFd, &clientAddr);
         threads[connFd] = std::thread (Handler::handle, connFd);
-        threads[connFd].detach();  
+        threads[connFd].detach();
     }
 
     Socket::Close(listenFd);
