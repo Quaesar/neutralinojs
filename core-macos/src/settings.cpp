@@ -33,13 +33,14 @@
 using namespace std;
 using json = nlohmann::json;
 json options;
+string dirpath;
 
 namespace settings {
     string getFileContent(string filename){
         INFO() << "Loading: " << filename;
 
         // Latest MACOS requires to obtain a full path to resources using Bundle API
-        #ifdef __APPLE__    
+        #ifdef __APPLE__
         CFBundleRef mainBundle = CFBundleGetMainBundle();
         CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL(mainBundle);
         char path[PATH_MAX];
@@ -48,9 +49,10 @@ namespace settings {
             // error!
         }
         CFRelease(resourcesURL);
-        
+
         std::string ppath(path);
         filename = ppath + "/" + filename;
+        dirpath = ppath;
         DEBUG() << "Resolving: " << filename;
         #endif
 
@@ -59,7 +61,7 @@ namespace settings {
             ERROR() << "Cannot read: " << filename;
             exit(1);
         }
-        
+
         string buffer = "";
         string line;
         while(!iFile.eof()){
@@ -99,7 +101,7 @@ namespace settings {
             std::string raw = getFileContent("app/settings.json");
             settings = json::parse(raw);
         }
-        catch(std::exception& e) { 
+        catch(std::exception& e) {
             ERROR() << e.what();
         }
         options = settings;
@@ -110,10 +112,11 @@ namespace settings {
         json settings = getOptions();
         string s = "var NL_OS='MacOS(Darwin)';";
         s += "var NL_VERSION='1.3.0';";
-        s += "var NL_NAME='" + settings["appname"].get<std::string>() + "';"; 
+        s += "var NL_NAME='" + settings["appname"].get<std::string>() + "';";
         s += "var NL_PORT=" + settings["appport"].get<std::string>() + ";";
         s += "var NL_MODE='" + settings["mode"].get<std::string>() + "';";
-        s += "var NL_TOKEN='" + authbasic::getToken() + "';";   
+        s += "var NL_TOKEN='" + authbasic::getToken() + "';";
+        s += "var NL_PATH='" + dirpath + "';";
 
         if(settings["globals"] != NULL) {
             for ( auto it: settings["globals"].items()) {
